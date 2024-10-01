@@ -1,15 +1,17 @@
 from abc import ABC, abstractmethod
-from typing import Literal, Optional, List
+from typing import Literal, Optional, List, Type
 from pydantic import BaseModel
 
 # TYPE DEFINITIONS
 
 class LLMResponse(BaseModel):
-    content: str
+    content: str | dict
     content_type: Literal["text", "tool_call"]
 
 class LLMTool(BaseModel):
-    call_spec: BaseModel
+    name: str
+    description: Optional[str]
+    call_spec: Type[BaseModel]
 
 class LLM(ABC):
     """An LLM that can be called with a specific prompt. May or may not have function calling."""
@@ -33,6 +35,6 @@ class LLMFactory:
         match spec:
             case 'gpt4o':
                 from .openai.gpt4o import GPT4o
-                return GPT4o([])
+                return GPT4o(tools)
             case _:
                 raise Exception(f"Implementation not supported for spec string \"{spec}\"")
