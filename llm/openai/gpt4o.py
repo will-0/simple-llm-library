@@ -1,4 +1,4 @@
-from ...llm import LLM, LLMResponse, LLMTool
+from .. import LLM, LLMResponse, LLMTool
 import os
 from typing import List
 from openai import OpenAI
